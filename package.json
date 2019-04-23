@@ -35,3 +35,5 @@
   "author": "",
   "license": "MIT"
 }
+
+    "puppeteer": "^1.14.0",
