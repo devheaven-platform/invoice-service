@@ -25,10 +25,10 @@ const uuid = require( "uuid" );
  *           type: number
  *           description: The amount that is being billed to the client
  *           example: 1000
- *         issuedAt:
+ *         path:
  *           type: string
- *           description: Date of issuing
- *           example: 2019-01-01T00:00:00.000Z
+ *           description: Path to the generated pdf file
+ *           example: localhost:8080/pdf/55417624-c159-4eab-9260-d4679a2e9b31
  *         invoiceItems:
  *           type: array
  *           description: A list containing the invoice item id's
@@ -56,6 +56,9 @@ const Invoice = new mongoose.Schema( {
     total: {
         type: Number,
         default: 0,
+    },
+    path: {
+        type: String,
     },
     invoiceItems: [ {
         type: String,
