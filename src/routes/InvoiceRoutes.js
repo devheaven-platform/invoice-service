@@ -157,3 +157,5 @@ router.post( "/", asyncMiddleware( controller.createInvoice ) );
  *        - Invoices
  */
 router.patch( "/", asyncMiddleware( controller.updateInvoice ) );
+
+module.exports = router;
