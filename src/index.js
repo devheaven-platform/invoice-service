@@ -36,6 +36,17 @@ app.get( "/metrics", ( req, res ) => {
     res.end( Prometheus.register.metrics() );
 } );
 
+// Health
+app.get( "/health", ( req, res ) => res.json( {
+    message: "Service is running",
+} ) );
+
+// Docs
+app.use( "/docs", swaggerUi.serve, swaggerUi.setup( specs ) );
+
+// Routes
+app.use( "/invoices", require( "./routes/InvoiceRoutes" ) );
+
 // Not found
 app.all( "*", ( req, res ) => res.status( 404 ).json( {
     name: "NotFound",
