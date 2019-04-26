@@ -30,7 +30,9 @@ const getAllInvoices = async () => Invoice.find().exec();
  * @param {*} id the id of the invoice that will be retrieved
  * @returns the invoice with the given id
  */
-const getInvoiceById = async id => Invoice.findById( id ).exec();
+const getInvoiceById = async id => Invoice.findById( id ).populate( {
+    path: "items",
+} ).exec();
 
 module.exports = {
     createInvoice,

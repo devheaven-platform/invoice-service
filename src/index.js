@@ -13,6 +13,8 @@ const specs = require( "./config/swagger" );
 const app = express();
 app.disable( "x-powered-by" );
 
+// require( "./models/Item" );
+
 // Server config
 const port = process.env.NODE_PORT;
 const host = process.env.NODE_HOST;
