@@ -17,6 +17,14 @@ const createInvoice = async ( newInvoice ) => {
     return invoice;
 };
 
+/**
+ * Gets all invoices from the database
+ *
+ * @returns a list of invoices
+*/
+const getAllInvoices = async () => Invoice.find().exec();
+
 module.exports = {
     createInvoice,
+    getAllInvoices,
 };

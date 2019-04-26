@@ -8,7 +8,10 @@ const InvoiceService = require( "../services/InvoiceService" );
  * @param {HttpRequest} req the request object
  * @param {HttpResponse} res the response object
  */
-const getAllInvoices = async ( req, res ) => {};
+const getAllInvoices = async ( req, res ) => {
+    const invoices = await InvoiceService.getAllInvoices();
+    return res.json( invoices );
+};
 
 /**
  * Gets a single invoice by it's id
