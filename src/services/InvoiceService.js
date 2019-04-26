@@ -24,7 +24,16 @@ const createInvoice = async ( newInvoice ) => {
 */
 const getAllInvoices = async () => Invoice.find().exec();
 
+/**
+ * Gets a single invoice from the database
+ *
+ * @param {*} id the id of the invoice that will be retrieved
+ * @returns the invoice with the given id
+ */
+const getInvoiceById = async id => Invoice.findById( id ).exec();
+
 module.exports = {
     createInvoice,
     getAllInvoices,
+    getInvoiceById,
 };

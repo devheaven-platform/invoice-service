@@ -41,4 +41,25 @@ describe( "InvoiceService", () => {
             expect( invoices[ 1 ].client ).to.equal( "8d50a412-3f38-458e-be0e-06f0e084afee" );
         } );
     } );
+
+    describe( "getInvoiceById", () => {
+        it( "Should return a single invoice", async () => {
+            const testInvoice = {
+                client: "8d50a412-3f38-458e-be0e-06f0e084afee",
+                project: "8d50a412-3f38-458e-be0e-06f0e084afee",
+            };
+            const { id } = await InvoiceService.createInvoice( testInvoice );
+
+            const invoice = await InvoiceService.getInvoiceById( id );
+
+            expect( invoice.client ).to.equal( testInvoice.client );
+            expect( invoice.project ).to.equal( testInvoice.project );
+        } );
+
+        it( "Should return null if no invoice is found", async () => {
+            const invoice = await InvoiceService.getInvoiceById( "8d50a412-3f38-458e-be0e-06f0e084afb7" );
+
+            should().not.exist( invoice );
+        } );
+    } );
 } );
