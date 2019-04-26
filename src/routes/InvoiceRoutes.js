@@ -138,6 +138,10 @@ router.post( "/", asyncMiddleware( controller.createInvoice ) );
  *                  type: string
  *                  description: The id of the project
  *                  example: 55417624-c159-4eab-9260-d4679a2e9b31
+ *                archived:
+ *                  type: boolean
+ *                  description: Wheter the invoice is archived
+ *                  example: false
  *      responses:
  *          '200':
  *            description: OK
@@ -156,6 +160,6 @@ router.post( "/", asyncMiddleware( controller.createInvoice ) );
  *      tags:
  *        - Invoices
  */
-router.patch( "/", asyncMiddleware( controller.updateInvoice ) );
+router.patch( "/:id", asyncMiddleware( controller.updateInvoice ) );
 
 module.exports = router;

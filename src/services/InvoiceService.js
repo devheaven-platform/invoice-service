@@ -35,8 +35,11 @@ const getInvoiceById = async id => Invoice.findById( id ).populate( {
     path: "items",
 } ).exec();
 
+const updateInvoice = async ( id, invoice ) => Invoice.findOneAndUpdate( { _id: id }, invoice, { new: true } ).exec();
+
 module.exports = {
     createInvoice,
     getAllInvoices,
     getInvoiceById,
+    updateInvoice,
 };

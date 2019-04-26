@@ -73,4 +73,23 @@ describe( "InvoiceService", () => {
             should().not.exist( invoice );
         } );
     } );
+
+    describe( "updateInvoice", async () => {
+        it( "Should update a invoice", async () => {
+            const testInvoice1 = {
+                client: "8d50a412-3f38-458e-be0e-06f0e084afb7",
+                project: "8d50a412-3f38-458e-be0e-06f0e084afb7",
+            };
+
+            const { id } = await InvoiceService.createInvoice( testInvoice1 );
+
+            const invoice = await InvoiceService.updateInvoice( id, {
+                archived: true,
+            } );
+
+            expect( invoice.archived ).to.equal( true );
+            expect( invoice.client ).to.equal( testInvoice1.client );
+            expect( invoice.project ).to.equal( testInvoice1.project );
+        } );
+    } );
 } );
