@@ -1,4 +1,5 @@
 const Invoice = require( "../models/Invoice" );
+const ItemService = require( "./ItemService" );
 
 /**
  * Creates a new Invoice and calls the project
@@ -11,7 +12,7 @@ const Invoice = require( "../models/Invoice" );
 const createInvoice = async ( newInvoice ) => {
     const invoice = new Invoice( newInvoice ).save();
 
-    // TODO: send event to project-management-service to retrieve the project
+    // TODO: send event to project-management-service to retrieve the project (Use ItemService to create items)
     // TODO: send event to client-service to retrieve the client
 
     return invoice;
@@ -24,7 +25,18 @@ const createInvoice = async ( newInvoice ) => {
 */
 const getAllInvoices = async () => Invoice.find().exec();
 
+/**
+ * Gets a single invoice from the database
+ *
+ * @param {*} id the id of the invoice that will be retrieved
+ * @returns the invoice with the given id
+ */
+const getInvoiceById = async id => Invoice.findById( id ).populate( {
+    path: "items",
+} ).exec();
+
 module.exports = {
     createInvoice,
     getAllInvoices,
+    getInvoiceById,
 };

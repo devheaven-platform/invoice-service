@@ -19,7 +19,19 @@ const getAllInvoices = async ( req, res ) => {
  * @param {HttpRequest} req the request object
  * @param {HttpResponse} res the response object
  */
-const getInvoiceById = async ( req, res ) => {};
+const getInvoiceById = async ( req, res ) => {
+    if ( !validate.id( req.params.id ) ) {
+        return res.status( 400 ).json( new ApiError( "Id is invalid" ) );
+    }
+
+    const invoice = await InvoiceService.getInvoiceById( req.params.id );
+
+    if ( !invoice ) {
+        return res.status( 400 ).json( new ApiError( "Invoice not found" ) );
+    }
+
+    return res.json( invoice );
+};
 
 /**
  * Creates a new invoice

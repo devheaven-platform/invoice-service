@@ -1,4 +1,5 @@
 const { expect, should } = require( "chai" );
+const Item = require( "../../src/models/Item" );
 
 const InvoiceService = require( "../../src/services/InvoiceService" );
 
@@ -39,6 +40,37 @@ describe( "InvoiceService", () => {
             expect( invoices.length ).to.equal( 2 );
             expect( invoices[ 0 ].client ).to.equal( "8d50a412-3f38-458e-be0e-06f0e084afb7" );
             expect( invoices[ 1 ].client ).to.equal( "8d50a412-3f38-458e-be0e-06f0e084afee" );
+        } );
+    } );
+
+    describe( "getInvoiceById", () => {
+        it( "Should return a single invoice", async () => {
+            const item = await new Item( {
+                description: "test",
+                hours: 4,
+            } ).save();
+
+            const testInvoice = {
+                client: "8d50a412-3f38-458e-be0e-06f0e084afee",
+                project: "8d50a412-3f38-458e-be0e-06f0e084afee",
+                items: [
+                    item.id,
+                ],
+            };
+            const { id } = await InvoiceService.createInvoice( testInvoice );
+
+            const invoice = await InvoiceService.getInvoiceById( id );
+
+            expect( invoice.client ).to.equal( testInvoice.client );
+            expect( invoice.project ).to.equal( testInvoice.project );
+            expect( invoice.items[ 0 ].description ).to.equal( item.description );
+            expect( invoice.items[ 0 ].hours ).to.equal( item.hours );
+        } );
+
+        it( "Should return null if no invoice is found", async () => {
+            const invoice = await InvoiceService.getInvoiceById( "8d50a412-3f38-458e-be0e-06f0e084afb7" );
+
+            should().not.exist( invoice );
         } );
     } );
 } );
