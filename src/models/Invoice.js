@@ -29,9 +29,13 @@ const uuid = require( "uuid" );
  *           type: string
  *           description: Path to the generated pdf file
  *           example: localhost:8080/pdf/55417624-c159-4eab-9260-d4679a2e9b31
- *         invoiceItems:
+ *         archived:
+ *           type: boolean
+ *           description: Whether the invoice is archived
+ *           example: false
+ *         items:
  *           type: array
- *           description: A list containing the invoice item id's
+ *           description: A list containing the item id's
  *           items:
  *             type: string
  *       required:
@@ -60,9 +64,13 @@ const Invoice = new mongoose.Schema( {
     path: {
         type: String,
     },
-    invoiceItems: [ {
+    archived: {
+        type: Boolean,
+        default: false,
+    },
+    items: [ {
         type: String,
-        ref: "InvoiceItem",
+        ref: "Item",
     } ],
 }, { timestamps: true } );
 
@@ -73,3 +81,4 @@ Invoice.set( "toJSON", {
 } );
 
 module.exports = mongoose.model( "Invoice", Invoice );
+/* eslint-enable no-underscore-dangle, no-param-reassign */

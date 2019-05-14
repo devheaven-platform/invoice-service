@@ -19,7 +19,19 @@ const getAllInvoices = async ( req, res ) => {
  * @param {HttpRequest} req the request object
  * @param {HttpResponse} res the response object
  */
-const getInvoiceById = async ( req, res ) => {};
+const getInvoiceById = async ( req, res ) => {
+    if ( !validate.id( req.params.id ) ) {
+        return res.status( 400 ).json( new ApiError( "Id is invalid" ) );
+    }
+
+    const invoice = await InvoiceService.getInvoiceById( req.params.id );
+
+    if ( !invoice ) {
+        return res.status( 400 ).json( new ApiError( "Invoice not found" ) );
+    }
+
+    return res.json( invoice );
+};
 
 /**
  * Creates a new invoice
@@ -45,7 +57,24 @@ const createInvoice = async ( req, res ) => {
  * @param {HttpRequest} req the request object
  * @param {HttpResponse} res the response object
  */
-const updateInvoice = async ( req, res ) => {};
+const updateInvoice = async ( req, res ) => {
+    if ( !validate.id( req.params.id ) ) {
+        return res.status( 400 ).json( new ApiError( "Id is invalid" ) );
+    }
+
+    if ( Object.keys( req.body ).length === 0 ) {
+        return res.status( 400 ).json( new ApiError( "One or more values are required" ) );
+    }
+
+    const errors = validate.update( req.body );
+    if ( Object.keys( errors ).length > 0 ) {
+        return res.status( 400 ).json( new ApiError( "One or more values are invalid", errors ) );
+    }
+
+    const invoice = await InvoiceService.updateInvoice( req.params.id, req.body );
+
+    return res.status( 200 ).json( invoice );
+};
 
 module.exports = {
     getAllInvoices,
