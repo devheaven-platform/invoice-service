@@ -4,6 +4,7 @@
   "description": "",
   "main": "src",
   "dependencies": {
+    "puppeteer": "^1.14.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "dotenv": "^7.0.0",
@@ -35,5 +36,3 @@
   "author": "",
   "license": "MIT"
 }
-
-    "puppeteer": "^1.14.0",
