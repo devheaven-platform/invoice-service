@@ -5,9 +5,7 @@ const createItem = async ( description, cost ) => {
         description,
         cost,
     };
-    const item = await new Item( newItem ).save();
-
-    return item;
+    return new Item( newItem ).save();
 };
 
 const getItemById = async id => Item.findById( id ).exec();

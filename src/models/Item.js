@@ -16,7 +16,7 @@ const uuid = require( "uuid" );
  *         description:
  *           type: string
  *           description: The description of the specific item
- *           example: Create board
+ *           example: Hosting
  *         cost:
  *           type: number
  *           description: The cost of the specific item

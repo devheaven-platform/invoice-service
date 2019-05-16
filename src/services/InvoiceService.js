@@ -47,15 +47,12 @@ const createInvoice = async ( req ) => {
     //     boards = res.data;
     // } );
 
-    const marginFormula = 1 + ( project.invoiceMargin / 100 );
-    const invoiceItems = [];
-    req.items.map( item => invoiceItems.push( ItemService.createItem( item.description, item.cost * marginFormula ) ) );
-    await Promise.all( invoiceItems ).then( ( data ) => {
-        newInvoice.items = data;
-    } );
+    const margin = 1 + ( project.invoiceMargin / 100 );
 
-    newInvoice.total = 0;
-    newInvoice.items.forEach( ( item ) => { newInvoice.total += item.cost; } );
+    const items = await Promise.all( req.items.map( item => ItemService.createItem( item.description, item.cost * margin ) ) );
+    newInvoice.items = items.map( res => res );
+
+    newInvoice.total = newInvoice.items.reduce( ( total, item ) => total + item.cost, 0 );
 
     const invoice = await new Invoice( newInvoice ).save();
 
