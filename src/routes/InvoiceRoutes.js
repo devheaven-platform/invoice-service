@@ -81,16 +81,27 @@ router.get( "/:id", asyncMiddleware( controller.getInvoiceById ) );
  *            schema:
  *              type: object
  *              properties:
- *                client:
- *                  type: string
- *                  description: The id of the client of the project
- *                  example: 55417624-c159-4eab-9260-d4679a2e9b31
  *                project:
  *                  type: string
  *                  description: The id of the project
  *                  example: 55417624-c159-4eab-9260-d4679a2e9b31
+ *                name:
+ *                  type: string
+ *                  description: The name of the invoice
+ *                  example: Project 1 invoice
+ *                startMilestone:
+ *                  type: string
+ *                  description: The id of the startMilestone
+ *                  example: 55417624-c159-4eab-9260-d4679a2e9b31
+ *                endMilestone:
+ *                  type: string
+ *                  description: The id of the startMilestone
+ *                  example: 55417624-c159-4eab-9260-d4679a2e9b31
+ *                items:
+ *                  type: array
+ *                  items:
+ *                      $ref: '#/components/schemas/Item'
  *              required:
- *                - client
  *                - project
  *      responses:
  *          '204':
