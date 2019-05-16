@@ -21,6 +21,10 @@ const uuid = require( "uuid" );
  *           type: string
  *           description: The id of the project
  *           example: 55417624-c159-4eab-9260-d4679a2e9b31
+ *         name:
+ *           type: string
+ *           description: The name of the invoice
+ *           example: Project 1 invoice
  *         total:
  *           type: number
  *           description: The amount that is being billed to the client
@@ -51,9 +55,12 @@ const Invoice = new mongoose.Schema( {
     },
     client: {
         type: String,
-        required: true,
     },
     project: {
+        type: String,
+        required: true,
+    },
+    name: {
         type: String,
         required: true,
     },

@@ -15,16 +15,16 @@ const uuid = require( "uuid" );
  *           example: 55417624-c159-4eab-9260-d4679a2e9b31
  *         description:
  *           type: string
- *           description: The description of the specific task
+ *           description: The description of the specific item
  *           example: Create board
- *         hours:
+ *         cost:
  *           type: number
- *           description: The amount of hours worked on the specific task
+ *           description: The cost of the specific item
  *           example: 10
  *
  *       required:
  *         - description
- *         - hours
+ *         - cost
  *         - createdAt
  *         - updatedAt
  */
@@ -37,7 +37,7 @@ const Item = new mongoose.Schema( {
         type: String,
         required: true,
     },
-    hours: {
+    cost: {
         type: Number,
         required: true,
     },

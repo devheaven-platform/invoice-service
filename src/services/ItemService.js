@@ -1,6 +1,10 @@
 const Item = require( "../models/Item" );
 
-const createItem = async ( newItem ) => {
+const createItem = async ( description, cost ) => {
+    const newItem = {
+        description,
+        cost,
+    };
     const item = await new Item( newItem ).save();
 
     return item;
