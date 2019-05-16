@@ -1,19 +1,20 @@
 const { expect, should } = require( "chai" );
 
 const ItemService = require( "../../src/services/ItemService" );
+const Item = require( "../../src/models/Item" );
 
 describe( "ItemService", () => {
     describe( "createItem", () => {
         it( "should create a item", async () => {
             const testItem = {
                 description: "test",
-                hours: 5,
+                cost: 5,
             };
 
-            const item = await ItemService.createItem( testItem );
+            const item = await ItemService.createItem( testItem.description, testItem.cost );
 
             expect( item.description ).to.equal( testItem.description );
-            expect( item.hours ).to.equal( testItem.hours );
+            expect( item.cost ).to.equal( testItem.cost );
             should().exist( item.id );
         } );
     } );
@@ -22,15 +23,15 @@ describe( "ItemService", () => {
         it( "Should return a single item", async () => {
             const testItem = {
                 description: "test",
-                hours: 4,
+                cost: 4,
             };
 
-            const { id } = await ItemService.createItem( testItem );
+            const { id } = await new Item( testItem ).save();
 
             const item = await ItemService.getItemById( id );
 
             expect( item.description ).to.equal( testItem.description );
-            expect( item.hours ).to.equal( testItem.hours );
+            expect( item.cost ).to.equal( testItem.cost );
         } );
 
         it( "Should return null if no item is found", async () => {

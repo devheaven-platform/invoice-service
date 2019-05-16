@@ -1,9 +1,11 @@
 const Item = require( "../models/Item" );
 
-const createItem = async ( newItem ) => {
-    const item = await new Item( newItem ).save();
-
-    return item;
+const createItem = async ( description, cost ) => {
+    const newItem = {
+        description,
+        cost,
+    };
+    return new Item( newItem ).save();
 };
 
 const getItemById = async id => Item.findById( id ).exec();

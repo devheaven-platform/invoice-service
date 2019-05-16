@@ -48,6 +48,10 @@ const createInvoice = async ( req, res ) => {
 
     const invoice = await InvoiceService.createInvoice( req.body );
 
+    if ( !invoice ) {
+        return res.status( 404 ).json( new ApiError( "One or more milestones are not found" ) );
+    }
+
     return res.status( 201 ).json( invoice );
 };
 

@@ -1,20 +1,35 @@
 const { expect, should } = require( "chai" );
-const Item = require( "../../src/models/Item" );
 
+const Item = require( "../../src/models/Item" );
+const Invoice = require( "../../src/models/Invoice" );
 const InvoiceService = require( "../../src/services/InvoiceService" );
 
 describe( "InvoiceService", () => {
     describe( "createInvoice", () => {
         it( "should create a invoice", async () => {
             const newInvoice = {
-                client: "8d50a412-3f38-458e-be0e-06f0e084afb7",
                 project: "8d50a412-3f38-458e-be0e-06f0e084afb7",
+                startMilestone: "8d50a412-3f38-458e-be0e-06f0e084aaaa",
+                endMilestone: "8d50a412-3f38-458e-be0e-06f0e084abbb",
+                name: "TestInvoice",
+                items: [
+                    {
+                        description: "Test item 1",
+                        cost: 10,
+                    },
+                    {
+                        description: "Test item 2",
+                        cost: 15,
+                    },
+                ],
             };
 
             const invoice = await InvoiceService.createInvoice( newInvoice );
 
             expect( invoice.client ).to.equal( newInvoice.client );
             expect( invoice.project ).to.equal( newInvoice.project );
+            expect( invoice.total ).to.equal( 30 );
+            expect( invoice.items.length ).to.equal( 2 );
             should().exist( invoice.id );
         } );
     } );
@@ -22,24 +37,26 @@ describe( "InvoiceService", () => {
     describe( "getAllInvoices", async () => {
         before( async () => {
             const testInvoice1 = {
-                client: "8d50a412-3f38-458e-be0e-06f0e084afb7",
                 project: "8d50a412-3f38-458e-be0e-06f0e084afb7",
+                name: "Test invoice 1",
             };
             const testInvoice2 = {
-                client: "8d50a412-3f38-458e-be0e-06f0e084afee",
                 project: "8d50a412-3f38-458e-be0e-06f0e084afee",
+                name: "Test invoice 2",
             };
 
-            await InvoiceService.createInvoice( testInvoice1 );
-            await InvoiceService.createInvoice( testInvoice2 );
+            await new Invoice( testInvoice1 ).save();
+            await new Invoice( testInvoice2 ).save();
         } );
 
         it( "Should retrieve all of the invoices described above", async () => {
             const invoices = await InvoiceService.getAllInvoices();
 
             expect( invoices.length ).to.equal( 2 );
-            expect( invoices[ 0 ].client ).to.equal( "8d50a412-3f38-458e-be0e-06f0e084afb7" );
-            expect( invoices[ 1 ].client ).to.equal( "8d50a412-3f38-458e-be0e-06f0e084afee" );
+            expect( invoices[ 0 ].project ).to.equal( "8d50a412-3f38-458e-be0e-06f0e084afb7" );
+            expect( invoices[ 0 ].name ).to.equal( "Test invoice 1" );
+            expect( invoices[ 1 ].project ).to.equal( "8d50a412-3f38-458e-be0e-06f0e084afee" );
+            expect( invoices[ 1 ].name ).to.equal( "Test invoice 2" );
         } );
     } );
 
@@ -47,24 +64,24 @@ describe( "InvoiceService", () => {
         it( "Should return a single invoice", async () => {
             const item = await new Item( {
                 description: "test",
-                hours: 4,
+                cost: 4,
             } ).save();
 
             const testInvoice = {
-                client: "8d50a412-3f38-458e-be0e-06f0e084afee",
                 project: "8d50a412-3f38-458e-be0e-06f0e084afee",
+                name: "Test invoice 1",
                 items: [
                     item.id,
                 ],
             };
-            const { id } = await InvoiceService.createInvoice( testInvoice );
+            const { id } = await new Invoice( testInvoice ).save();
 
             const invoice = await InvoiceService.getInvoiceById( id );
 
-            expect( invoice.client ).to.equal( testInvoice.client );
+            expect( invoice.name ).to.equal( testInvoice.name );
             expect( invoice.project ).to.equal( testInvoice.project );
             expect( invoice.items[ 0 ].description ).to.equal( item.description );
-            expect( invoice.items[ 0 ].hours ).to.equal( item.hours );
+            expect( invoice.items[ 0 ].cost ).to.equal( item.cost );
         } );
 
         it( "Should return null if no invoice is found", async () => {
@@ -77,18 +94,18 @@ describe( "InvoiceService", () => {
     describe( "updateInvoice", async () => {
         it( "Should update a invoice", async () => {
             const testInvoice1 = {
-                client: "8d50a412-3f38-458e-be0e-06f0e084afb7",
                 project: "8d50a412-3f38-458e-be0e-06f0e084afb7",
+                name: "Test invoice 1",
             };
 
-            const { id } = await InvoiceService.createInvoice( testInvoice1 );
+            const { id } = await new Invoice( testInvoice1 ).save();
 
             const invoice = await InvoiceService.updateInvoice( id, {
                 archived: true,
             } );
 
             expect( invoice.archived ).to.equal( true );
-            expect( invoice.client ).to.equal( testInvoice1.client );
+            expect( invoice.name ).to.equal( testInvoice1.name );
             expect( invoice.project ).to.equal( testInvoice1.project );
         } );
     } );
