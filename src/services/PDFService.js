@@ -2,7 +2,6 @@ const path = require( "path" );
 const fs = require( "fs" );
 const puppeteer = require( "puppeteer" );
 
-generatePDF().then();
 async function generatePDF( data ) {
     const content = fs.readFileSync( "./invoice.html", "utf8" );
 
