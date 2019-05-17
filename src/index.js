@@ -54,6 +54,9 @@ app.use( "/docs", swaggerUi.serve, swaggerUi.setup( specs ) );
 // Routes
 app.use( "/invoices", require( "./routes/InvoiceRoutes" ) );
 
+// Express
+app.use( "/static", express.static( "invoices" ) );
+
 // Not found
 app.all( "*", ( req, res ) => res.status( 404 ).json( {
     message: "Resource Not Found",

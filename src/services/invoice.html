@@ -8,8 +8,6 @@
         max-width: 800px;
         margin: auto;
         padding: 30px;
-        border: 1px solid #eee;
-        box-shadow: 0 0 10px rgba(0, 0, 0, .15);
         font-size: 16px;
         line-height: 24px;
         font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
@@ -58,7 +56,7 @@
     .invoice-box table tr.item td{
         border-bottom: 1px solid #eee;
     }
-    
+
     .invoice-box table tr.item.last td {
         border-bottom: none;
     }
@@ -110,9 +108,8 @@
                             </td>
                             
                             <td>
-                                Invoice #: 123<br>
-                                Created: January 1, 2019<br>
-                                Due: February 1, 2019
+                                Invoice: {invoice-name}<br>
+                                Created: {invoice-date}<br>
                             </td>
                         </tr>
                     </table>
@@ -140,22 +137,14 @@
             </tr>
             
             <tr class="heading">
-                <td>
+                <td colspan="2">
                     Project
-                </td>
-                
-                <td>
-                    ID
                 </td>
             </tr>
             
             <tr class="details">
-                <td>
-                    Some cool project
-                </td>
-                
-                <td>
-                    1232
+                <td colspan="2">
+                    {project-name}
                 </td>
             </tr>
             
@@ -169,32 +158,13 @@
                 </td>
             </tr>
             
-            <tr class="item">
-                <td>
-                    Research
-                </td>
-                
-                <td>
-                    $100.00
-                </td>
-            </tr>
-            
-            
-            <tr class="item last">
-                <td>
-                    Analysis
-                </td>
-                
-                <td>
-                    $50.00
-                </td>
-            </tr>
+            {items}
             
             <tr class="total">
                 <td></td>
                 
                 <td>
-                   Total: $150.00
+                   Total: ${total-cost}
                 </td>
             </tr>
         </table>
