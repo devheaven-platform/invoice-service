@@ -4,7 +4,6 @@
   "description": "",
   "main": "src",
   "dependencies": {
-    "puppeteer": "^1.14.0",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
