@@ -29,10 +29,6 @@ const uuid = require( "uuid" );
  *           type: number
  *           description: The amount that is being billed to the client
  *           example: 1000
- *         path:
- *           type: string
- *           description: Path to the generated pdf file
- *           example: localhost:8080/pdf/55417624-c159-4eab-9260-d4679a2e9b31
  *         archived:
  *           type: boolean
  *           description: Whether the invoice is archived
@@ -67,9 +63,6 @@ const Invoice = new mongoose.Schema( {
     total: {
         type: Number,
         default: 0,
-    },
-    path: {
-        type: String,
     },
     archived: {
         type: Boolean,
