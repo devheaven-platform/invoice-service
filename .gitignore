@@ -162,3 +162,6 @@ $RECYCLE.BIN/
 # Custom
 .env
 package-lock.json
+
+# Invoices
+*.pdf

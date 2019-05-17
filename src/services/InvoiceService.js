@@ -1,6 +1,7 @@
 const axios = require( "axios" );
 const Invoice = require( "../models/Invoice" );
 const ItemService = require( "./ItemService" );
+const PDFService = require( "./PDFService" );
 
 const ProjectURI = process.env.PROJECT_MANAGEMENT_URI;
 const TaskManagementURI = process.env.TASK_MANAGEMENT_URI;
@@ -55,6 +56,8 @@ const createInvoice = async ( req ) => {
     newInvoice.total = newInvoice.items.reduce( ( total, item ) => total + item.cost, 0 );
 
     const invoice = await new Invoice( newInvoice ).save();
+
+    await PDFService.generatePDF( invoice, project );
 
     return invoice;
 };

@@ -2,16 +2,27 @@ const path = require( "path" );
 const fs = require( "fs" );
 const puppeteer = require( "puppeteer" );
 
-async function generatePDF( data ) {
-    const content = fs.readFileSync( "./invoice.html", "utf8" );
+async function generatePDF( invoice, project ) {
+    let content = fs.readFileSync( "src/services/invoice.html", "utf8" );
+
+    let items = "";
+    invoice.items.forEach( ( item ) => {
+        items += `<tr class="item"><td>${ item.description }</td><td>$${ item.cost }</td></tr>`;
+    } );
+
+    content = content.replace( "{items}", items );
+    content = content.replace( "{project-name}", project.name );
+    content = content.replace( "{invoice-name}", invoice.name );
+    content = content.replace( "{invoice-date}", new Date( invoice.createdAt ).toLocaleDateString() );
+    content = content.replace( "{total-cost}", invoice.total );
 
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent( content );
-    await page.setViewport({ width: 1920, height: 1080});
+    await page.setViewport( { width: 1920, height: 1080 } );
     await page.emulateMedia( "print" );
     await page.pdf( {
-        path: "invoice.pdf",
+        path: `invoices/${ invoice.id }.pdf`,
         format: "A4",
         printBackground: true,
     } );
