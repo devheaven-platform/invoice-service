@@ -1,21 +1,18 @@
-const expressPrometheus = require( "express-prom-bundle" );
-const swaggerUi = require( "swagger-ui-express" );
-const bodyparser = require( "body-parser" );
-const Prometheus = require( "prom-client" );
-const mongoose = require( "mongoose" );
-const express = require( "express" );
-const cors = require( "cors" );
 require( "dotenv" ).config();
-
+const express = require( "express" );
+const bodyparser = require( "body-parser" );
+const cors = require( "cors" );
+const mongoose = require( "mongoose" );
+const Prometheus = require( "prom-client" );
+const expressPrometheus = require( "express-prom-bundle" );
 const logger = require( "./config/logger" );
-const specs = require( "./config/swagger" );
 
 const app = express();
 app.disable( "x-powered-by" );
 
 // Server config
-const port = process.env.NODE_PORT;
-const host = process.env.NODE_HOST;
+const port = process.env.PORT;
+const host = process.env.HOSTNAME;
 const mongoDB = process.env.MONGO_DB;
 const mongoURI = process.env.MONGO_URI;
 
@@ -25,11 +22,7 @@ app.use( cors() );
 
 // Connect database
 mongoose
-    .connect( mongoURI + mongoDB, {
-        useNewUrlParser: true,
-        useCreateIndex: true,
-        useFindAndModify: false,
-    } )
+    .connect( mongoURI + mongoDB, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false } )
     .then( () => logger.info( "MongoDB connected" ) )
     .catch( error => logger.error( error.stack ) );
 
@@ -37,7 +30,7 @@ mongoose
 Prometheus.collectDefaultMetrics();
 app.use( expressPrometheus() );
 
-// Metrics
+// Add prometheus
 app.get( "/metrics", ( req, res ) => {
     res.set( "Content-Type", Prometheus.register.contentType );
     res.end( Prometheus.register.metrics() );
@@ -56,15 +49,18 @@ app.use( "/invoices", require( "./routes/InvoiceRoutes" ) );
 
 // Not found
 app.all( "*", ( req, res ) => res.status( 404 ).json( {
+    name: "NotFound",
     message: "Resource Not Found",
+    status: 404,
 } ) );
 
 // Global error handler
-// eslint-disable-next-line
-app.use( ( error, req, res, next ) => {
-    logger.error( error.stack );
+app.use( ( error, req, res ) => {
+    logger.error( "An unhandled exception occurred", error );
     return res.status( 500 ).json( {
-        message: "An unexpected error occurred",
+        name: "InternalServerError",
+        message: "An error ocurred",
+        status: 500,
     } );
 } );
 
