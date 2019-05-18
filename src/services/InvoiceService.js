@@ -7,6 +7,42 @@ const ProjectURI = process.env.PROJECT_MANAGEMENT_URI;
 const TaskManagementURI = process.env.TASK_MANAGEMENT_URI;
 
 /**
+ * Retrieve the start date of a milestone
+ *
+ * @param {Object} newInvoice the invoice that has the id of the milestone
+ * @param {Object} project the project that contains the milestones
+ * @returns the start date of the milestone
+ */
+const getStartDate = async ( newInvoice, project ) => {
+    if ( newInvoice.startMilestone ) {
+        const milestone = project.milestones.find( x => x.id === newInvoice.startMilestone );
+        if ( !milestone ) {
+            return null;
+        }
+        return milestone.date;
+    }
+    return null;
+};
+
+/**
+ * Retrieve the end date of a milestone
+ *
+ * @param {Object} newInvoice the invoice that has the id of the milestone
+ * @param {Object} project the project that contains the milestones
+ * @returns the end date of the milestone
+ */
+const getEndDate = async ( newInvoice, project ) => {
+    if ( newInvoice.endMilestone ) {
+        const milestone = project.milestones.find( x => x.id === newInvoice.endMilestone );
+        if ( !milestone ) {
+            return null;
+        }
+        return milestone.date;
+    }
+    return null;
+};
+
+/**
  * Creates a new Invoice and calls the project
  * management service to retrieve the project based on it's id,
  * also calls client service to retrieve the client based on it's id
@@ -18,28 +54,14 @@ const createInvoice = async ( req ) => {
     const newInvoice = req;
 
     let project;
-    let startDate;
-    let endDate;
     let boards;
 
     await axios.get( `${ ProjectURI }/projects/${ newInvoice.project }` ).then( ( res ) => {
         project = res.data;
     } );
 
-    if ( newInvoice.startMilestone ) {
-        const milestone = project.milestones.find( x => x.id === newInvoice.startMilestone );
-        if ( !milestone ) {
-            return null;
-        }
-        startDate = milestone.date;
-    }
-    if ( newInvoice.endMilestone ) {
-        const milestone = project.milestones.find( x => x.id === newInvoice.endMilestone );
-        if ( !milestone ) {
-            return null;
-        }
-        endDate = milestone.date;
-    }
+    const startDate = await getStartDate( newInvoice, project );
+    const endDate = await getEndDate( newInvoice, project );
 
     // TODO: send event to client-service to retrieve the client
     // TODO: send event to task management service to retrieve the tasks
@@ -50,10 +72,12 @@ const createInvoice = async ( req ) => {
 
     const margin = 1 + ( project.invoiceMargin / 100 );
 
-    const items = await Promise.all( req.items.map( item => ItemService.createItem( item.description, item.cost * margin ) ) );
-    newInvoice.items = items.map( res => res );
+    if ( req.items ) {
+        const items = await Promise.all( req.items.map( item => ItemService.createItem( item.description, item.cost * margin ) ) );
+        newInvoice.items = items.map( res => res );
 
-    newInvoice.total = newInvoice.items.reduce( ( total, item ) => total + item.cost, 0 );
+        newInvoice.total = newInvoice.items.reduce( ( total, item ) => total + item.cost, 0 );
+    }
 
     const invoice = await new Invoice( newInvoice ).save();
 
