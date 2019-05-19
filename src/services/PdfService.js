@@ -1,14 +1,16 @@
-const path = require( "path" );
 const fs = require( "fs" );
 const puppeteer = require( "puppeteer" );
 
-async function generatePDF( invoice, project ) {
-    let content = fs.readFileSync( "src/services/invoice.html", "utf8" );
+/**
+ * Generates a pdf given a invoice and project.
+ *
+ * @param {Object} invoice the invoice object.
+ * @param {Object} project the project object.
+ */
+const generate = async ( invoice, project ) => {
+    let content = fs.readFileSync( "src/assets/invoice.html", "utf8" );
 
-    let items = "";
-    invoice.items.forEach( ( item ) => {
-        items += `<tr class="item"><td>${ item.description }</td><td>$${ item.cost }</td></tr>`;
-    } );
+    const items = invoice.items.map( item => `<tr class="item"><td>${ item.description }</td><td>$${ item.cost }</td></tr>` );
 
     content = content.replace( "{items}", items );
     content = content.replace( "{project-name}", project.name );
@@ -27,8 +29,8 @@ async function generatePDF( invoice, project ) {
         printBackground: true,
     } );
     await browser.close();
-}
+};
 
 module.exports = {
-    generatePDF,
+    generate,
 };

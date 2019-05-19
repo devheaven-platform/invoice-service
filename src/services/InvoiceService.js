@@ -1,90 +1,11 @@
 const axios = require( "axios" );
+
+const PdfService = require( "./PdfService" );
 const Invoice = require( "../models/Invoice" );
-const ItemService = require( "./ItemService" );
-const PDFService = require( "./PDFService" );
+const InvoiceItemService = require( "./InvoiceItemService" );
+const { getInvoiceStartDate, getInvoiceEndDate } = require( "../utils/Date" );
 
-const ProjectURI = process.env.PROJECT_MANAGEMENT_URI;
-const TaskManagementURI = process.env.TASK_MANAGEMENT_URI;
-
-/**
- * Retrieve the start date of a milestone
- *
- * @param {Object} newInvoice the invoice that has the id of the milestone
- * @param {Object} project the project that contains the milestones
- * @returns the start date of the milestone
- */
-const getStartDate = async ( newInvoice, project ) => {
-    if ( newInvoice.startMilestone ) {
-        const milestone = project.milestones.find( x => x.id === newInvoice.startMilestone );
-        if ( !milestone ) {
-            return null;
-        }
-        return milestone.date;
-    }
-    return null;
-};
-
-/**
- * Retrieve the end date of a milestone
- *
- * @param {Object} newInvoice the invoice that has the id of the milestone
- * @param {Object} project the project that contains the milestones
- * @returns the end date of the milestone
- */
-const getEndDate = async ( newInvoice, project ) => {
-    if ( newInvoice.endMilestone ) {
-        const milestone = project.milestones.find( x => x.id === newInvoice.endMilestone );
-        if ( !milestone ) {
-            return null;
-        }
-        return milestone.date;
-    }
-    return null;
-};
-
-/**
- * Creates a new Invoice and calls the project
- * management service to retrieve the project based on it's id,
- * also calls client service to retrieve the client based on it's id
- *
- * @param {Object} req the invoice that will be added
- * @returns the newly created invoice or null if an error occurred
- */
-const createInvoice = async ( req ) => {
-    const newInvoice = req;
-
-    let project;
-    let boards;
-
-    await axios.get( `${ ProjectURI }/projects/${ newInvoice.project }` ).then( ( res ) => {
-        project = res.data;
-    } );
-
-    const startDate = await getStartDate( newInvoice, project );
-    const endDate = await getEndDate( newInvoice, project );
-
-    // TODO: send event to client-service to retrieve the client
-    // TODO: send event to task management service to retrieve the tasks
-
-    // await axios.get( `${ TaskManagementURI }/boards/for/${ newInvoice.project }?start=${ startDate }&end=${ endDate }` ).then( ( res ) => {
-    //     boards = res.data;
-    // } );
-
-    const margin = 1 + ( project.invoiceMargin / 100 );
-
-    if ( req.items ) {
-        const items = await Promise.all( req.items.map( item => ItemService.createItem( item.description, item.cost * margin ) ) );
-        newInvoice.items = items.map( res => res );
-
-        newInvoice.total = newInvoice.items.reduce( ( total, item ) => total + item.cost, 0 );
-    }
-
-    const invoice = await new Invoice( newInvoice ).save();
-
-    await PDFService.generatePDF( invoice, project );
-
-    return invoice;
-};
+const projectUri = process.env.PROJECT_MANAGEMENT_URI;
 
 /**
  * Gets all invoices from the database
@@ -103,11 +24,39 @@ const getInvoiceById = async id => Invoice.findById( id ).populate( {
     path: "items",
 } ).exec();
 
-const updateInvoice = async ( id, invoice ) => Invoice.findOneAndUpdate( { _id: id }, invoice, { new: true } ).exec();
+/**
+ * Creates a new Invoice and calls the project
+ * management service to retrieve the project based on it's id,
+ * also calls client service to retrieve the client based on it's id
+ *
+ * @param {Object} data the invoice that will be added
+ * @returns the newly created invoice or null if an error occurred
+ */
+const createInvoice = async ( data ) => {
+    const newInvoice = data;
+
+    const { data: project } = await axios.get( `${ projectUri }/projects/${ newInvoice.project }` );
+    const startDate = await getInvoiceStartDate( newInvoice, project );
+    const endDate = await getInvoiceEndDate( newInvoice, project );
+
+    // TODO: retrieve client from the client service
+    // TODO: retrieve tasks from the task management service
+
+    const margin = 1 + ( project.invoiceMargin / 100 );
+
+    if ( newInvoice.items ) {
+        newInvoice.items = await Promise.all( newInvoice.items.map( item => InvoiceItemService.createInvoiceItem( item.description, item.cost * margin ) ) );
+        newInvoice.total = newInvoice.items.reduce( ( total, item ) => total + item.cost, 0 );
+    }
+
+    const invoice = await new Invoice( newInvoice ).save();
+    await PdfService.generate( invoice, project );
+
+    return invoice;
+};
 
 module.exports = {
-    createInvoice,
     getAllInvoices,
     getInvoiceById,
-    updateInvoice,
+    createInvoice,
 };

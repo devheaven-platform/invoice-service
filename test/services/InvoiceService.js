@@ -1,7 +1,7 @@
 const { expect, should } = require( "chai" );
 
-const Item = require( "../../src/models/Item" );
 const Invoice = require( "../../src/models/Invoice" );
+const InvoiceItem = require( "../../src/models/InvoiceItem" );
 const InvoiceService = require( "../../src/services/InvoiceService" );
 
 describe( "InvoiceService", () => {
@@ -62,7 +62,7 @@ describe( "InvoiceService", () => {
 
     describe( "getInvoiceById", () => {
         it( "Should return a single invoice", async () => {
-            const item = await new Item( {
+            const item = await new InvoiceItem( {
                 description: "test",
                 cost: 4,
             } ).save();
@@ -88,25 +88,6 @@ describe( "InvoiceService", () => {
             const invoice = await InvoiceService.getInvoiceById( "8d50a412-3f38-458e-be0e-06f0e084afb7" );
 
             should().not.exist( invoice );
-        } );
-    } );
-
-    describe( "updateInvoice", async () => {
-        it( "Should update a invoice", async () => {
-            const testInvoice1 = {
-                project: "8d50a412-3f38-458e-be0e-06f0e084afb7",
-                name: "Test invoice 1",
-            };
-
-            const { id } = await new Invoice( testInvoice1 ).save();
-
-            const invoice = await InvoiceService.updateInvoice( id, {
-                archived: true,
-            } );
-
-            expect( invoice.archived ).to.equal( true );
-            expect( invoice.name ).to.equal( testInvoice1.name );
-            expect( invoice.project ).to.equal( testInvoice1.project );
         } );
     } );
 } );

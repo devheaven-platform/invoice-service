@@ -3,9 +3,9 @@ const swaggerJsdoc = require( "swagger-jsdoc" );
 const options = {
     swaggerDefinition: {
         info: {
-            title: "Invoice",
+            title: "Task Management",
             version: "1.0.0",
-            description: "Invoice API for the DevHeaven platform",
+            description: "Task Management API for the DevHeaven platform",
             contact: {
                 name: "DevHeaven",
                 url: "http://devheaven.nl",

@@ -1,6 +1,6 @@
 const express = require( "express" );
 
-const asyncMiddleware = require( "../config/middleware/async" );
+const asyncMiddleware = require( "../config/middleware/Async" );
 const controller = require( "../controllers/InvoiceController" );
 
 /**
@@ -100,7 +100,16 @@ router.get( "/:id", asyncMiddleware( controller.getInvoiceById ) );
  *                items:
  *                  type: array
  *                  items:
- *                      $ref: '#/components/schemas/Item'
+ *                    type: object
+ *                    properties:
+ *                      description:
+ *                        type: string
+ *                        description: The description of the item
+ *                        example: Hosting
+ *                      cost:
+ *                        type: number
+ *                        description: The cost of the item
+ *                        example: 10
  *              required:
  *                - project
  *      responses:
@@ -120,57 +129,5 @@ router.get( "/:id", asyncMiddleware( controller.getInvoiceById ) );
  *        - Invoices
  */
 router.post( "/", asyncMiddleware( controller.createInvoice ) );
-
-/**
- * @swagger
- * /invoices/{id}:
- *    patch:
- *      operationId: UpdateInvoice
- *      summary: Update a existing invoice
- *      parameters:
- *        - in: path
- *          name: id
- *          schema:
- *            type: string
- *          required: true
- *          description: Id of the invoice to update
- *      requestBody:
- *        required: true
- *        content:
- *          application/json:
- *            schema:
- *              type: object
- *              properties:
- *                client:
- *                  type: string
- *                  description: The id of the client of the project
- *                  example: 55417624-c159-4eab-9260-d4679a2e9b31
- *                project:
- *                  type: string
- *                  description: The id of the project
- *                  example: 55417624-c159-4eab-9260-d4679a2e9b31
- *                archived:
- *                  type: boolean
- *                  description: Wheter the invoice is archived
- *                  example: false
- *      responses:
- *          '200':
- *            description: OK
- *            content:
- *              application/json:
- *                schema:
- *                  $ref: '#/components/schemas/Invoice'
- *          '400':
- *            $ref: '#/components/responses/BadRequest'
- *          '401':
- *            $ref: '#/components/responses/Unauthorized'
- *          '404':
- *            $ref: '#/components/responses/NotFound'
- *          '500':
- *            $ref: '#/components/responses/InternalServerError'
- *      tags:
- *        - Invoices
- */
-router.patch( "/:id", asyncMiddleware( controller.updateInvoice ) );
 
 module.exports = router;

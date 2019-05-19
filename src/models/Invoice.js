@@ -70,7 +70,7 @@ const Invoice = new mongoose.Schema( {
     },
     items: [ {
         type: String,
-        ref: "Item",
+        ref: "InvoiceItem",
     } ],
 }, { timestamps: true } );
 
