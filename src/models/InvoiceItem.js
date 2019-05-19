@@ -45,7 +45,7 @@ const InvoiceItem = new mongoose.Schema( {
 InvoiceItem.set( "toJSON", {
     virtuals: true,
     vesionKey: false,
-    transform: ( doc, ret ) => { delete ret._id; },
+    transform: ( doc, ret ) => { delete ret._id; delete ret.__v; },
 } );
 
 module.exports = mongoose.model( "InvoiceItem", InvoiceItem );

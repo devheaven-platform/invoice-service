@@ -77,7 +77,7 @@ const Invoice = new mongoose.Schema( {
 Invoice.set( "toJSON", {
     virtuals: true,
     vesionKey: false,
-    transform: ( doc, ret ) => { delete ret._id; },
+    transform: ( doc, ret ) => { delete ret._id; delete ret.__v; },
 } );
 
 module.exports = mongoose.model( "Invoice", Invoice );

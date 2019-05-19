@@ -33,6 +33,16 @@ const getInvoiceById = async ( req, res ) => {
     return res.json( invoice );
 };
 
+const getPdfByInvoiceId = async ( req, res ) => {
+    if ( !validate.id( req.params.id ) ) {
+        return res.status( 400 ).json( new ApiError( "Id is invalid" ) );
+    }
+
+    // TODO: get pdf from file storage
+
+    return null;
+};
+
 /**
  * Creates a new invoice
  *
@@ -58,5 +68,6 @@ const createInvoice = async ( req, res ) => {
 module.exports = {
     getAllInvoices,
     getInvoiceById,
+    getPdfByInvoiceId,
     createInvoice,
 };
