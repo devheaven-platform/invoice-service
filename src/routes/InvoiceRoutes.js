@@ -68,7 +68,7 @@ router.get( "/", asyncMiddleware( controller.getAllInvoices ) );
  */
 router.get( "/:id", asyncMiddleware( controller.getInvoiceById ) );
 
-router.get( "/:id/pdf/:name", asyncMiddleware( controller.getPdfByInvoiceId ) );
+router.get( "/pdf/:id", asyncMiddleware( controller.getPdfByInvoiceId ) );
 
 /**
  * @swagger

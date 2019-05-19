@@ -1,3 +1,6 @@
+const path = require( "path" );
+const fs = require( "fs" );
+
 const ApiError = require( "../models/Error" );
 const validate = require( "../validators/InvoiceValidator" );
 const InvoiceService = require( "../services/InvoiceService" );
@@ -27,7 +30,7 @@ const getInvoiceById = async ( req, res ) => {
     const invoice = await InvoiceService.getInvoiceById( req.params.id );
 
     if ( !invoice ) {
-        return res.status( 400 ).json( new ApiError( "Invoice not found" ) );
+        return res.status( 404 ).json( new ApiError( "Invoice not found" ) );
     }
 
     return res.json( invoice );
@@ -38,9 +41,19 @@ const getPdfByInvoiceId = async ( req, res ) => {
         return res.status( 400 ).json( new ApiError( "Id is invalid" ) );
     }
 
-    // TODO: get pdf from file storage
+    const invoice = await InvoiceService.getInvoiceById( req.params.id );
 
-    return null;
+    if ( !invoice ) {
+        return res.status( 404 ).json( new ApiError( "Invoice not found" ) );
+    }
+
+    const pdf = path.resolve( `${ __dirname }/../../invoices/${ req.params.id }.pdf` );
+
+    if ( !fs.existsSync( pdf ) ) {
+        return res.status( 404 ).json( new ApiError( "Pdf not found" ) );
+    }
+
+    return res.sendFile( pdf );
 };
 
 /**
