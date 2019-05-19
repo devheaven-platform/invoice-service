@@ -1,7 +1,7 @@
 const { expect, should } = require( "chai" );
 
-const ItemService = require( "../../src/services/ItemService" );
-const Item = require( "../../src/models/Item" );
+const InvoiceItem = require( "../../src/models/InvoiceItem" );
+const InvoiceItemService = require( "../../src/services/InvoiceItemService" );
 
 describe( "ItemService", () => {
     describe( "createItem", () => {
@@ -11,7 +11,7 @@ describe( "ItemService", () => {
                 cost: 5,
             };
 
-            const item = await ItemService.createItem( testItem.description, testItem.cost );
+            const item = await InvoiceItemService.createInvoiceItem( testItem.description, testItem.cost );
 
             expect( item.description ).to.equal( testItem.description );
             expect( item.cost ).to.equal( testItem.cost );
@@ -26,16 +26,16 @@ describe( "ItemService", () => {
                 cost: 4,
             };
 
-            const { id } = await new Item( testItem ).save();
+            const { id } = await new InvoiceItem( testItem ).save();
 
-            const item = await ItemService.getItemById( id );
+            const item = await InvoiceItemService.getInvoiceItemById( id );
 
             expect( item.description ).to.equal( testItem.description );
             expect( item.cost ).to.equal( testItem.cost );
         } );
 
         it( "Should return null if no item is found", async () => {
-            const item = await ItemService.getItemById( "8d50a412-3f38-458e-be0e-06f0e084afb7" );
+            const item = await InvoiceItemService.getInvoiceItemById( "8d50a412-3f38-458e-be0e-06f0e084afb7" );
 
             should().not.exist( item );
         } );

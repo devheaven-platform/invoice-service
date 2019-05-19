@@ -6,7 +6,7 @@ const uuid = require( "uuid" );
  * @swagger
  * components:
  *   schemas:
- *     Item:
+ *     InvoiceItem:
  *       type: object
  *       properties:
  *         id:
@@ -21,14 +21,13 @@ const uuid = require( "uuid" );
  *           type: number
  *           description: The cost of the specific item
  *           example: 10
- *
  *       required:
  *         - description
  *         - cost
  *         - createdAt
  *         - updatedAt
  */
-const Item = new mongoose.Schema( {
+const InvoiceItem = new mongoose.Schema( {
     _id: {
         type: String,
         default: uuid.v4,
@@ -43,11 +42,11 @@ const Item = new mongoose.Schema( {
     },
 }, { timestamps: true } );
 
-Item.set( "toJSON", {
+InvoiceItem.set( "toJSON", {
     virtuals: true,
     vesionKey: false,
-    transform: ( doc, ret ) => { delete ret._id; },
+    transform: ( doc, ret ) => { delete ret._id; delete ret.__v; },
 } );
 
-module.exports = mongoose.model( "Item", Item );
+module.exports = mongoose.model( "InvoiceItem", InvoiceItem );
 /* eslint-enable no-underscore-dangle, no-param-reassign */

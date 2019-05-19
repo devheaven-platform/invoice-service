@@ -1,4 +1,6 @@
 # Invoice Service
+[![Build Status](http://drone.devheaven.nl/api/badges/devheaven-platform/invoice-service/status.svg)](http://drone.devheaven.nl/devheaven-platform/invoice-service)
+
 This repository contains the invoice service for the DevHeaven platform.
 
 # Contribution
