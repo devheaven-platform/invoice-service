@@ -36,6 +36,12 @@ const getInvoiceById = async ( req, res ) => {
     return res.json( invoice );
 };
 
+/**
+ * Gets a pdf from an invoice.
+ *
+ * @param {HttpRequest} req the request object
+ * @param {HttpResponse} res the response object
+ */
 const getPdfByInvoiceId = async ( req, res ) => {
     if ( !validate.id( req.params.id ) ) {
         return res.status( 400 ).json( new ApiError( "Id is invalid" ) );

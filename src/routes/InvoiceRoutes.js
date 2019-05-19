@@ -68,6 +68,38 @@ router.get( "/", asyncMiddleware( controller.getAllInvoices ) );
  */
 router.get( "/:id", asyncMiddleware( controller.getInvoiceById ) );
 
+/**
+ * @swagger
+ * /invoices/pdf/{id}:
+ *    get:
+ *      operationId: GetPdfByInvoiceId
+ *      summary: Returns the pdf for an invoice
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: string
+ *          required: true
+ *          description: Id of the invoice to retrieve the pdf for
+ *      responses:
+ *          '200':
+ *            description: OK
+ *            content:
+ *              application/pdf:
+ *                schema:
+ *                  type: string
+ *                  format: binary
+ *          '400':
+ *            $ref: '#/components/responses/BadRequest'
+ *          '401':
+ *            $ref: '#/components/responses/Unauthorized'
+ *          '404':
+ *            $ref: '#/components/responses/NotFound'
+ *          '500':
+ *            $ref: '#/components/responses/InternalServerError'
+ *      tags:
+ *        - Invoices
+ */
 router.get( "/pdf/:id", asyncMiddleware( controller.getPdfByInvoiceId ) );
 
 /**
