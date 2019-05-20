@@ -4,6 +4,7 @@
   "description": "",
   "main": "src",
   "dependencies": {
+    "puppeteer": "^1.11.0",
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
@@ -13,7 +14,6 @@
     "lodash": "^4.17.11",
     "mongoose": "^5.4.19",
     "prom-client": "^11.3.0",
-    "puppeteer": "^1.14.0",
     "swagger-jsdoc": "^3.2.8",
     "swagger-ui-express": "^4.0.2",
     "uuid": "^3.3.2",
