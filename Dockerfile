@@ -1,4 +1,4 @@
-FROM buildkite/puppeteer:v1.14.0
+FROM buildkite/puppeteer:v1.11.0
 
 # Set working directory
 WORKDIR /app
