@@ -42,27 +42,32 @@ const createInvoice = async ( data ) => {
     const { data: project } = await axios.get( `${ projectUri }/projects/${ newInvoice.project }` );
     const startDate = await getInvoiceStartDate( newInvoice, project );
     const endDate = await getInvoiceEndDate( newInvoice, project );
-    console.log( `${ taskUri }/boards/for/${ newInvoice.project }${ createQueryString( { start: startDate, end: endDate } ) }` );
-    const boards = await axios.get( `${ taskUri }/boards/for/${ newInvoice.project }?${ querystring.stringify( { start: startDate, end: endDate } ) }` );
-    console.log( boards.data );
+
+    const boards = await axios.get( `${ taskUri }/boards/for/${ newInvoice.project }${ createQueryString( { start: startDate, end: endDate } ) }` );
+
     // TODO: retrieve client from the client service
 
     const margin = 1 + ( project.invoiceMargin / 100 );
 
     if ( newInvoice.items ) {
         newInvoice.items = await Promise.all( newInvoice.items.map( item => InvoiceItemService.createInvoiceItem( item.description, item.cost * margin ) ) );
-        newInvoice.total = newInvoice.items.reduce( ( total, item ) => total + item.cost, 0 );
+    } else {
+        newInvoice.items = [];
     }
 
-    newInvoice.items = [ ...newInvoice.items,
-        flatten( await Promise.all(
-            boards.data.boards.map( async board => Promise.all(
-                board.columns[ 0 ].tasks.map( task => InvoiceItemService.createInvoiceItem(
-                    task.name, ( task.hours * project.pricePerPoint ) * margin,
+    if ( boards.data ) {
+        newInvoice.items = flatten( [ ...newInvoice.items,
+            flatten( await Promise.all(
+                boards.data.map( async board => Promise.all(
+                    board.columns[ 0 ].tasks.map( task => InvoiceItemService.createInvoiceItem(
+                        task.name, ( task.hours * project.pricePerPoint ) * margin,
+                    ) ),
                 ) ),
             ) ),
-        ) ),
-    ];
+        ] );
+    }
+
+    newInvoice.total = newInvoice.items.reduce( ( total, item ) => total + item.cost, 0 );
 
     const invoice = await new Invoice( newInvoice ).save();
     await PdfService.generate( invoice, project );
@@ -70,8 +75,11 @@ const createInvoice = async ( data ) => {
     return invoice;
 };
 
+const updateInvoice = async ( id, invoice ) => Invoice.findOneAndUpdate( { _id: id }, invoice, { new: true } ).exec();
+
 module.exports = {
     getAllInvoices,
     getInvoiceById,
     createInvoice,
+    updateInvoice,
 };

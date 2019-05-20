@@ -5,7 +5,7 @@
  * @returns the create query string
  */
 const createQueryString = params => Object.entries( params ).map( ( entry, index ) => {
-    const delimiter = index > 0 ? "&" : "?";
+    const delimiter = index > 0 && params.start !== null ? "&" : "?";
     return entry[ 1 ] !== null ? `${ delimiter }${ entry[ 0 ] }=${ entry[ 1 ] }` : null;
 } ).join( "" );
 

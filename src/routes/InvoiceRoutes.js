@@ -164,4 +164,48 @@ router.get( "/pdf/:id", asyncMiddleware( controller.getPdfByInvoiceId ) );
  */
 router.post( "/", asyncMiddleware( controller.createInvoice ) );
 
+/**
+ * @swagger
+ * /invoices/{id}:
+ *    patch:
+ *      operationId: UpdateInvoice
+ *      summary: Update a existing invoice
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: string
+ *          required: true
+ *          description: Id of the invoice to update
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                archived:
+ *                  type: boolean
+ *                  description: Wheter the invoice is archived
+ *                  example: false
+ *      responses:
+ *          '200':
+ *            description: OK
+ *            content:
+ *              application/json:
+ *                schema:
+ *                  $ref: '#/components/schemas/Invoice'
+ *          '400':
+ *            $ref: '#/components/responses/BadRequest'
+ *          '401':
+ *            $ref: '#/components/responses/Unauthorized'
+ *          '404':
+ *            $ref: '#/components/responses/NotFound'
+ *          '500':
+ *            $ref: '#/components/responses/InternalServerError'
+ *      tags:
+ *        - Invoices
+ */
+router.patch( "/:id", asyncMiddleware( controller.updateInvoice ) );
+
 module.exports = router;

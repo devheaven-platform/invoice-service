@@ -5,34 +5,32 @@ const InvoiceItem = require( "../../src/models/InvoiceItem" );
 const InvoiceService = require( "../../src/services/InvoiceService" );
 
 describe( "InvoiceService", () => {
-    // describe( "createInvoice", () => {
-    //     it( "should create a invoice", async () => {
-    //         const newInvoice = {
-    //             project: "8d50a412-3f38-458e-be0e-06f0e084afb7",
-    //             startMilestone: "8d50a412-3f38-458e-be0e-06f0e084aaaa",
-    //             endMilestone: "8d50a412-3f38-458e-be0e-06f0e084abbb",
-    //             name: "TestInvoice",
-    //             items: [
-    //                 {
-    //                     description: "Test item 1",
-    //                     cost: 10,
-    //                 },
-    //                 {
-    //                     description: "Test item 2",
-    //                     cost: 15,
-    //                 },
-    //             ],
-    //         };
+    describe( "createInvoice", () => {
+        it( "should create a invoice", async () => {
+            const newInvoice = {
+                project: "8d50a412-3f38-458e-be0e-06f0e084afb7",
+                name: "TestInvoice",
+                items: [
+                    {
+                        description: "Test item 1",
+                        cost: 10,
+                    },
+                    {
+                        description: "Test item 2",
+                        cost: 15,
+                    },
+                ],
+            };
 
-    //         const invoice = await InvoiceService.createInvoice( newInvoice );
+            const invoice = await InvoiceService.createInvoice( newInvoice );
 
-    //         expect( invoice.client ).to.equal( newInvoice.client );
-    //         expect( invoice.project ).to.equal( newInvoice.project );
-    //         expect( invoice.total ).to.equal( 30 );
-    //         expect( invoice.items.length ).to.equal( 2 );
-    //         should().exist( invoice.id );
-    //     } );
-    // } );
+            expect( invoice.client ).to.equal( newInvoice.client );
+            expect( invoice.project ).to.equal( newInvoice.project );
+            expect( invoice.total ).to.equal( 60 );
+            expect( invoice.items.length ).to.equal( 3 );
+            should().exist( invoice.id );
+        } );
+    } );
 
     describe( "getAllInvoices", async () => {
         before( async () => {
@@ -88,6 +86,25 @@ describe( "InvoiceService", () => {
             const invoice = await InvoiceService.getInvoiceById( "8d50a412-3f38-458e-be0e-06f0e084afb7" );
 
             should().not.exist( invoice );
+        } );
+    } );
+
+    describe( "updateInvoice", async () => {
+        it( "Should update a invoice", async () => {
+            const testInvoice1 = {
+                project: "8d50a412-3f38-458e-be0e-06f0e084afb7",
+                name: "Test invoice 1",
+            };
+
+            const { id } = await new Invoice( testInvoice1 ).save();
+
+            const invoice = await InvoiceService.updateInvoice( id, {
+                archived: true,
+            } );
+
+            expect( invoice.archived ).to.equal( true );
+            expect( invoice.name ).to.equal( testInvoice1.name );
+            expect( invoice.project ).to.equal( testInvoice1.project );
         } );
     } );
 } );

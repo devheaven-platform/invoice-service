@@ -10,13 +10,13 @@ const puppeteer = require( "puppeteer" );
 const generate = async ( invoice, project ) => {
     let content = fs.readFileSync( "src/assets/invoice.html", "utf8" );
 
-    const items = invoice.items.map( item => `<tr class="item"><td>${ item.description }</td><td>$${ item.cost }</td></tr>` );
+    const items = invoice.items.map( item => `<tr class="item"><td>${ item.description }</td><td>$${ item.cost.toFixed( 2 ) }</td></tr>` ).join( "" );
 
     content = content.replace( "{items}", items );
     content = content.replace( "{project-name}", project.name );
     content = content.replace( "{invoice-name}", invoice.name );
     content = content.replace( "{invoice-date}", new Date( invoice.createdAt ).toLocaleDateString() );
-    content = content.replace( "{total-cost}", invoice.total );
+    content = content.replace( "{total-cost}", invoice.total.toFixed( 2 ) );
 
     const browser = await puppeteer.launch( { args: [ "--no-sandbox" ] } );
     const page = await browser.newPage();
