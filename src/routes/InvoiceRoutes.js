@@ -208,4 +208,31 @@ router.post( "/", asyncMiddleware( controller.createInvoice ) );
  */
 router.patch( "/:id", asyncMiddleware( controller.updateInvoice ) );
 
+/**
+ * @swagger
+ * /invoices/{id}:
+ *    delete:
+ *      operationId: DeleteInvoice
+ *      summary: Delete one invoice
+ *      parameters:
+ *        - in: path
+ *          name: id
+ *          schema:
+ *            type: string
+ *          required: true
+ *          description: Id of the invoice to delete
+ *      responses:
+ *          '204':
+ *            description: No Content
+ *          '401':
+ *            $ref: '#/components/responses/Unauthorized'
+ *          '404':
+ *            $ref: '#/components/responses/NotFound'
+ *          '500':
+ *            $ref: '#/components/responses/InternalServerError'
+ *      tags:
+ *        - Invoices
+ */
+router.delete( "/:id", asyncMiddleware( controller.deleteInvoice ) );
+
 module.exports = router;

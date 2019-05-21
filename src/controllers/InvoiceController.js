@@ -109,10 +109,31 @@ const updateInvoice = async ( req, res ) => {
     return res.status( 200 ).json( invoice );
 };
 
+/**
+ * Deletes a invoice
+ *
+ * @param {HttpRequest} req the request object
+ * @param {HttpResponse} res the response object
+ */
+const deleteInvoice = async ( req, res ) => {
+    if ( !validate.id( req.params.id ) ) {
+        return res.status( 400 ).json( new ApiError( "Id is invalid" ) );
+    }
+
+    const invoice = await InvoiceService.deleteInvoice( req.params.id );
+
+    if ( !invoice ) {
+        return res.status( 404 ).json( new ApiError( "Invoice not found" ) );
+    }
+
+    return res.status( 204 ).send();
+};
+
 module.exports = {
     getAllInvoices,
     getInvoiceById,
     getPdfByInvoiceId,
     createInvoice,
     updateInvoice,
+    deleteInvoice,
 };

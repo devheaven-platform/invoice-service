@@ -18,7 +18,7 @@ const generate = async ( invoice, project ) => {
     content = content.replace( "{invoice-date}", new Date( invoice.createdAt ).toLocaleDateString() );
     content = content.replace( "{total-cost}", invoice.total.toFixed( 2 ) );
 
-    const browser = await puppeteer.launch( { args: [ "--no-sandbox" ] } );
+    const browser = await puppeteer.launch( { headless: true, args: [ "--no-sandbox", "--disable-dev-shm-usage" ] } );
     const page = await browser.newPage();
     await page.setContent( content );
     await page.setViewport( { width: 1920, height: 1080 } );

@@ -1,5 +1,4 @@
 const axios = require( "axios" );
-const querystring = require( "querystring" );
 const { flatten } = require( "lodash" );
 
 const PdfService = require( "./PdfService" );
@@ -77,9 +76,18 @@ const createInvoice = async ( data ) => {
 
 const updateInvoice = async ( id, invoice ) => Invoice.findOneAndUpdate( { _id: id }, invoice, { new: true } ).exec();
 
+/**
+ * Deletes a invoice from the database
+ *
+ * @param {String} id the id of the invoice to delete
+ * @returns the deleted invoice or null if an error occurred
+ */
+const deleteInvoice = async id => Invoice.findByIdAndRemove( id ).exec();
+
 module.exports = {
     getAllInvoices,
     getInvoiceById,
     createInvoice,
     updateInvoice,
+    deleteInvoice,
 };
