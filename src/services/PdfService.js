@@ -10,7 +10,7 @@ const puppeteer = require( "puppeteer" );
 const generate = async ( invoice, project ) => {
     let content = fs.readFileSync( "src/assets/invoice.html", "utf8" );
 
-    const items = invoice.items.map( item => `<tr class="item"><td>${ item.description }</td><td>$${ item.cost.toFixed( 2 ) }</td></tr>` );
+    const items = invoice.items.map( item => `<tr class="item"><td>${ item.description }</td><td>$${ item.cost.toFixed( 2 ) }</td></tr>` ).join( "" );
 
     content = content.replace( "{items}", items );
     content = content.replace( "{project-name}", project.name );
