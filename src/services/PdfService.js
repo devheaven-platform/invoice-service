@@ -18,17 +18,18 @@ const generate = async ( invoice, project ) => {
     content = content.replace( "{invoice-date}", new Date( invoice.createdAt ).toLocaleDateString() );
     content = content.replace( "{total-cost}", invoice.total.toFixed( 2 ) );
 
-    const browser = await puppeteer.launch( { headless: true, args: [ "--no-sandbox", "--disable-dev-shm-usage" ] } );
-    const page = await browser.newPage();
-    await page.setContent( content );
-    await page.setViewport( { width: 1920, height: 1080 } );
-    await page.emulateMedia( "print" );
-    await page.pdf( {
-        path: `invoices/${ invoice.id }.pdf`,
-        format: "A4",
-        printBackground: true,
+    await puppeteer.launch( { devtools: false, headless: true, args: [ "--no-sandbox", "--disable-dev-shm-usage" ] } ).then( async ( browser ) => {
+        const page = await browser.newPage();
+        await page.setContent( content );
+        await page.setViewport( { width: 1920, height: 1080 } );
+        await page.emulateMedia( "print" );
+        await page.pdf( {
+            path: `invoices/${ invoice.id }.pdf`,
+            format: "A4",
+            printBackground: true,
+        } );
+        await browser.close();
     } );
-    await browser.close();
 };
 
 module.exports = {
