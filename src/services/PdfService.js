@@ -19,8 +19,7 @@ const generate = async ( invoice, project ) => {
 
     pdf.create( content, { format: "a4" } ).toStream( ( err, stream ) => {
         if ( err ) return err;
-        const newStream = stream.pipe( fs.createWriteStream( `invoices/${ invoice.id }.pdf` ) );
-        newStream.end();
+        stream.pipe( fs.createWriteStream( `invoices/${ invoice.id }.pdf` ) );
     } );
 };
 
