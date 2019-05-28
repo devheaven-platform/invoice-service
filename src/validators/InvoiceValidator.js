@@ -46,14 +46,6 @@ const create = ( body ) => {
 const update = ( body ) => {
     const errors = {};
 
-    if ( body.client !== undefined && !GenericValidator.id( body.client ) ) {
-        errors.client = "Client must be a valid UUID";
-    }
-
-    if ( body.client !== undefined && !GenericValidator.id( body.project ) ) {
-        errors.project = "Project must be a valid UUID";
-    }
-
     if ( body.archived !== undefined && !GenericValidator.isBoolean( body.archived ) ) {
         errors.archived = "Archived must be of type boolean";
     }

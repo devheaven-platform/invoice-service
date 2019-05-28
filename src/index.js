@@ -1,4 +1,5 @@
 const expressPrometheus = require( "express-prom-bundle" );
+const expressWinston = require( "express-winston" );
 const swaggerUi = require( "swagger-ui-express" );
 const bodyparser = require( "body-parser" );
 const Prometheus = require( "prom-client" );
@@ -7,8 +8,8 @@ const express = require( "express" );
 const cors = require( "cors" );
 require( "dotenv" ).config();
 
-const logger = require( "./config/logger" );
-const specs = require( "./config/swagger" );
+const logger = require( "./config/logger/Logger" );
+const specs = require( "./config/swagger/Swagger" );
 
 const app = express();
 app.disable( "x-powered-by" );
@@ -20,6 +21,7 @@ const mongoDB = process.env.MONGO_DB;
 const mongoURI = process.env.MONGO_URI;
 
 // Middleware
+app.use( expressWinston.logger( logger ) );
 app.use( bodyparser.json() );
 app.use( cors() );
 
@@ -53,6 +55,9 @@ app.use( "/docs", swaggerUi.serve, swaggerUi.setup( specs ) );
 
 // Routes
 app.use( "/invoices", require( "./routes/InvoiceRoutes" ) );
+
+// Express
+app.use( "/static", express.static( "invoices" ) );
 
 // Not found
 app.all( "*", ( req, res ) => res.status( 404 ).json( {

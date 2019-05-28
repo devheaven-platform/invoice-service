@@ -1,6 +1,6 @@
+
 const fs = require("fs");
 const pdf = require("html-pdf");
-
 /**
  * Generates a pdf given a invoice and project.
  *

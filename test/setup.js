@@ -6,7 +6,8 @@ const MockAdapter = require( "axios-mock-adapter" );
 
 const mock = new MockAdapter( axios );
 
-const ProjectURI = process.env.PROJECT_MANAGEMENT_URI;
+const projectURI = process.env.PROJECT_MANAGEMENT_URI;
+const taskUri = process.env.TASK_MANAGEMENT_URI;
 
 let mongoServer;
 
@@ -21,9 +22,10 @@ before( ( done ) => {
             .then( done() )
             .catch( error => done( error ) ) );
 
-    mock.onGet( `${ ProjectURI }/projects/8d50a412-3f38-458e-be0e-06f0e084afb7` ).reply( 200, {
+    mock.onGet( `${ projectURI }/projects/8d50a412-3f38-458e-be0e-06f0e084afb7` ).reply( 200, {
         id: "8d50a412-3f38-458e-be0e-06f0e084afb7",
         invoiceMargin: 20,
+        pricePerPoint: 5,
         milestones: [
             {
                 id: "8d50a412-3f38-458e-be0e-06f0e084aaaa",
@@ -33,6 +35,22 @@ before( ( done ) => {
             },
         ],
     } );
+
+    mock.onGet( `${ taskUri }/boards/for/8d50a412-3f38-458e-be0e-06f0e084afb7` ).reply( 200, [
+        {
+            name: "board",
+            columns: [
+                {
+                    tasks: [
+                        {
+                            name: "TestTask",
+                            hours: 5,
+                        },
+                    ],
+                },
+            ],
+        },
+    ] );
 } );
 
 after( () => {
