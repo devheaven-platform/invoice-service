@@ -53,7 +53,7 @@ const getPdfByInvoiceId = async ( req, res ) => {
         return res.status( 404 ).json( new ApiError( "Invoice not found" ) );
     }
 
-    const pdf = path.resolve( `${ __dirname }/../../invoices/${ req.params.id }.pdf` );
+    const pdf = path.resolve( `${ __dirname }/../../invoices/${ req.params.id }.html` );
 
     if ( !fs.existsSync( pdf ) ) {
         return res.status( 404 ).json( new ApiError( "Pdf not found" ) );
