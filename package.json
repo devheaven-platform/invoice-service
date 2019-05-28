@@ -11,16 +11,15 @@
     "express": "^4.16.4",
     "express-prom-bundle": "^5.1.2",
     "express-winston": "^3.1.0",
-    "html-pdf": "^2.2.0",
     "lodash": "^4.17.11",
     "mongoose": "^5.4.19",
     "prom-client": "^11.3.0",
-    "puppeteer": "1.11.0",
     "swagger-jsdoc": "^3.2.8",
     "swagger-ui-express": "^4.0.2",
     "uuid": "^3.3.2",
     "validator": "^11.0.0",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "wkhtmltopdf": "^0.3.4"
   },
   "devDependencies": {
     "axios-mock-adapter": "^1.16.0",

@@ -1,5 +1,5 @@
 const fs = require( "fs" );
-const pdf = require( "html-pdf" );
+const wkhtmltopdf = require( "wkhtmltopdf" );
 /**
  * Generates a pdf given a invoice and project.
  *
@@ -17,10 +17,7 @@ const generate = async ( invoice, project ) => {
     content = content.replace( "{invoice-date}", new Date( invoice.createdAt ).toLocaleDateString() );
     content = content.replace( "{total-cost}", invoice.total.toFixed( 2 ) );
 
-    const config = { format: "A4" };
-    pdf.create( content, config ).toFile( `invoices/${ invoice.id }.pdf`, ( err ) => {
-        if ( err ) return console.log( err );
-    } );
+    wkhtmltopdf( content, { output: `invoices/${ invoice.id }.pdf` } );
 };
 
 module.exports = {
