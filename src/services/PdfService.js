@@ -1,4 +1,5 @@
 const fs = require( "fs" );
+const pdf = require( "html-pdf" );
 /**
  * Generates a pdf given a invoice and project.
  *
@@ -15,13 +16,9 @@ const generate = async ( invoice, project ) => {
     content = content.replace( "{invoice-name}", invoice.name );
     content = content.replace( "{invoice-date}", new Date( invoice.createdAt ).toLocaleDateString() );
     content = content.replace( "{total-cost}", invoice.total.toFixed( 2 ) );
-    fs.writeFile( `invoices/${ invoice.id }.html`, content, ( err ) => {
-        if ( err ) {
-            return console.log( err );
-        }
-
-        return console.log( "The file was saved!" );
-
+    pdf.create( content, { format: "a4" } ).toFile( `invoices/${ invoice.id }.pdf`, ( err, res ) => {
+        if ( err ) return err;
+        return res;
     } );
 };
 
