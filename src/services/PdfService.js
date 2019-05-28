@@ -15,11 +15,13 @@ const generate = async ( invoice, project ) => {
     content = content.replace( "{invoice-name}", invoice.name );
     content = content.replace( "{invoice-date}", new Date( invoice.createdAt ).toLocaleDateString() );
     content = content.replace( "{total-cost}", invoice.total.toFixed( 2 ) );
-    fs.writeFile( `/invoices/${ invoice.id }.html`, content, ( err ) => {
+    fs.writeFile( `invoices/${ invoice.id }.html`, content, ( err ) => {
         if ( err ) {
             return console.log( err );
         }
-     return console.log( "The file was saved!" );
+
+        return console.log( "The file was saved!" );
+
     } );
 };
 
