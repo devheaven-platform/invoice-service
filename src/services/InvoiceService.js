@@ -74,10 +74,16 @@ const createInvoice = async ( data ) => {
     return invoice;
 };
 
+/**
+ * Updates an invoice from the database
+ * 
+ * @param {String} id the id of the invoice to update
+ * @param {Object} invoice the new object with the updated values 
+ */
 const updateInvoice = async ( id, invoice ) => Invoice.findOneAndUpdate( { _id: id }, invoice, { new: true } ).exec();
 
 /**
- * Deletes a invoice from the database
+ * Deletes an invoice from the database
  *
  * @param {String} id the id of the invoice to delete
  * @returns the deleted invoice or null if an error occurred
