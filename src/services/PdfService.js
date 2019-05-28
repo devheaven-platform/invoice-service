@@ -1,5 +1,4 @@
 const fs = require( "fs" );
-
 /**
  * Generates a pdf given a invoice and project.
  *
@@ -20,8 +19,7 @@ const generate = async ( invoice, project ) => {
         if ( err ) {
             return console.log( err );
         }
-
-        return console.log( "The file was saved!" );
+     return console.log( "The file was saved!" );
     } );
 };
 
