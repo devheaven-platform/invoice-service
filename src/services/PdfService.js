@@ -16,9 +16,10 @@ const generate = async ( invoice, project ) => {
     content = content.replace( "{invoice-name}", invoice.name );
     content = content.replace( "{invoice-date}", new Date( invoice.createdAt ).toLocaleDateString() );
     content = content.replace( "{total-cost}", invoice.total.toFixed( 2 ) );
-    pdf.create( content, { format: "a4" } ).toFile( `invoices/${ invoice.id }.pdf`, ( err, res ) => {
+
+    await pdf.create( content, { format: "a4" } ).toStream( async ( err, stream ) => {
         if ( err ) return err;
-        return res;
+        await stream.pipe( fs.createWriteStream( `invoices/${ invoice.id }.pdf` ) );
     } );
 };
 
