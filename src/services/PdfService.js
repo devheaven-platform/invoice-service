@@ -18,8 +18,9 @@ const generate = async ( invoice, project ) => {
     content = content.replace( "{total-cost}", invoice.total.toFixed( 2 ) );
 
     const config = { format: "A4" };
-    pdf.create( content, config ).toFile( `invoices/${ invoice.id }.pdf`, ( err ) => {
+    pdf.create( content, config ).toFile( `invoices/${ invoice.id }.pdf`, ( err, res ) => {
         if ( err ) return console.log( err );
+        return res;
     } );
 };
 
