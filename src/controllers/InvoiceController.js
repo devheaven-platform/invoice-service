@@ -53,13 +53,13 @@ const getPdfByInvoiceId = async ( req, res ) => {
         return res.status( 404 ).json( new ApiError( "Invoice not found" ) );
     }
 
-    const pdf = path.resolve( `${ __dirname }/../../invoices/${ req.params.id }.pdf` );
+    const html = path.resolve( `${ __dirname }/../../invoices/${ req.params.id }.html` );
 
-    if ( !fs.existsSync( pdf ) ) {
-        return res.status( 404 ).json( new ApiError( "pdf not found" ) );
+    if ( !fs.existsSync( html ) ) {
+        return res.status( 404 ).json( new ApiError( "html not found" ) );
     }
 
-    return res.sendFile( pdf );
+    return res.sendFile( html );
 };
 
 /**
