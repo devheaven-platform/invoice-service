@@ -35,14 +35,14 @@ const getInvoiceById = async id => Invoice.findById( id ).populate( {
  * @param {Object} data the invoice that will be added
  * @returns the newly created invoice or null if an error occurred
  */
-const createInvoice = async ( data ) => {
+const createInvoice = async ( data, token ) => {
     const newInvoice = data;
 
-    const { data: project } = await axios.get( `${ projectUri }/projects/${ newInvoice.project }` );
+    const { data: project } = await axios.get( `${ projectUri }/projects/${ newInvoice.project }`, { headers: { Authorization: token } } );
     const startDate = await getInvoiceStartDate( newInvoice, project );
     const endDate = await getInvoiceEndDate( newInvoice, project );
 
-    const boards = await axios.get( `${ taskUri }/boards/for/${ newInvoice.project }${ createQueryString( { start: startDate, end: endDate } ) }` );
+    const boards = await axios.get( `${ taskUri }/boards/for/${ newInvoice.project }${ createQueryString( { start: startDate, end: endDate } ) }`, { headers: { Authorization: token } } );
 
     // TODO: retrieve client from the client service
 
@@ -76,9 +76,9 @@ const createInvoice = async ( data ) => {
 
 /**
  * Updates an invoice from the database
- * 
+ *
  * @param {String} id the id of the invoice to update
- * @param {Object} invoice the new object with the updated values 
+ * @param {Object} invoice the new object with the updated values
  */
 const updateInvoice = async ( id, invoice ) => Invoice.findOneAndUpdate( { _id: id }, invoice, { new: true } ).exec();
 
