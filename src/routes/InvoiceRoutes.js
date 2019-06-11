@@ -102,12 +102,10 @@ router.get( "/:id", authMiddleware, asyncMiddleware( controller.getInvoiceById )
  *            $ref: '#/components/responses/NotFound'
  *          '500':
  *            $ref: '#/components/responses/InternalServerError'
- *      security:
- *        - bearerAuth: []
  *      tags:
  *        - Invoices
  */
-router.get( "/pdf/:id", authMiddleware, asyncMiddleware( controller.getPdfByInvoiceId ) );
+router.get( "/pdf/:id", asyncMiddleware( controller.getPdfByInvoiceId ) );
 
 /**
  * @swagger
