@@ -1,6 +1,7 @@
 const express = require( "express" );
 
 const asyncMiddleware = require( "../config/middleware/Async" );
+const authMiddleware = require( "../config/middleware/Auth" );
 const controller = require( "../controllers/InvoiceController" );
 
 /**
@@ -30,10 +31,12 @@ const router = express.Router();
  *            $ref: '#/components/responses/Unauthorized'
  *          '500':
  *            $ref: '#/components/responses/InternalServerError'
+ *      security:
+ *        - bearerAuth: []
  *      tags:
  *        - Invoices
  */
-router.get( "/", asyncMiddleware( controller.getAllInvoices ) );
+router.get( "/", authMiddleware, asyncMiddleware( controller.getAllInvoices ) );
 
 /**
  * @swagger
@@ -63,10 +66,12 @@ router.get( "/", asyncMiddleware( controller.getAllInvoices ) );
  *            $ref: '#/components/responses/NotFound'
  *          '500':
  *            $ref: '#/components/responses/InternalServerError'
+ *      security:
+ *        - bearerAuth: []
  *      tags:
  *        - Invoices
  */
-router.get( "/:id", asyncMiddleware( controller.getInvoiceById ) );
+router.get( "/:id", authMiddleware, asyncMiddleware( controller.getInvoiceById ) );
 
 /**
  * @swagger
@@ -97,10 +102,12 @@ router.get( "/:id", asyncMiddleware( controller.getInvoiceById ) );
  *            $ref: '#/components/responses/NotFound'
  *          '500':
  *            $ref: '#/components/responses/InternalServerError'
+ *      security:
+ *        - bearerAuth: []
  *      tags:
  *        - Invoices
  */
-router.get( "/pdf/:id", asyncMiddleware( controller.getPdfByInvoiceId ) );
+router.get( "/pdf/:id", authMiddleware, asyncMiddleware( controller.getPdfByInvoiceId ) );
 
 /**
  * @swagger
@@ -159,10 +166,12 @@ router.get( "/pdf/:id", asyncMiddleware( controller.getPdfByInvoiceId ) );
  *            $ref: '#/components/responses/Unauthorized'
  *          '500':
  *            $ref: '#/components/responses/InternalServerError'
+ *      security:
+ *        - bearerAuth: []
  *      tags:
  *        - Invoices
  */
-router.post( "/", asyncMiddleware( controller.createInvoice ) );
+router.post( "/", authMiddleware, asyncMiddleware( controller.createInvoice ) );
 
 /**
  * @swagger
@@ -203,10 +212,12 @@ router.post( "/", asyncMiddleware( controller.createInvoice ) );
  *            $ref: '#/components/responses/NotFound'
  *          '500':
  *            $ref: '#/components/responses/InternalServerError'
+ *      security:
+ *        - bearerAuth: []
  *      tags:
  *        - Invoices
  */
-router.patch( "/:id", asyncMiddleware( controller.updateInvoice ) );
+router.patch( "/:id", authMiddleware, asyncMiddleware( controller.updateInvoice ) );
 
 /**
  * @swagger
@@ -230,9 +241,11 @@ router.patch( "/:id", asyncMiddleware( controller.updateInvoice ) );
  *            $ref: '#/components/responses/NotFound'
  *          '500':
  *            $ref: '#/components/responses/InternalServerError'
+ *      security:
+ *        - bearerAuth: []
  *      tags:
  *        - Invoices
  */
-router.delete( "/:id", asyncMiddleware( controller.deleteInvoice ) );
+router.delete( "/:id", authMiddleware, asyncMiddleware( controller.deleteInvoice ) );
 
 module.exports = router;

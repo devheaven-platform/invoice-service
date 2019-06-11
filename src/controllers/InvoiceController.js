@@ -75,7 +75,7 @@ const createInvoice = async ( req, res ) => {
         return res.status( 400 ).json( new ApiError( "One or more values are invalid", errors ) );
     }
 
-    const invoice = await InvoiceService.createInvoice( req.body );
+    const invoice = await InvoiceService.createInvoice( req.body, req.headers.authorization );
 
     if ( !invoice ) {
         return res.status( 404 ).json( new ApiError( "One or more milestones are not found" ) );
