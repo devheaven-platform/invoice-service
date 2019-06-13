@@ -9,6 +9,7 @@ const { getInvoiceStartDate, getInvoiceEndDate } = require( "../utils/Date" );
 
 const projectUri = process.env.PROJECT_MANAGEMENT_URI;
 const taskUri = process.env.TASK_MANAGEMENT_URI;
+const clientUri = process.env.CLIENT_URI;
 
 /**
  * Gets all invoices from the database
@@ -44,7 +45,7 @@ const createInvoice = async ( data, token ) => {
 
     const boards = await axios.get( `${ taskUri }/boards/for/${ newInvoice.project }${ createQueryString( { start: startDate, end: endDate } ) }`, { headers: { Authorization: token } } );
 
-    // TODO: retrieve client from the client service
+    const { data: client } = await axios.get( `${ clientUri }/clients/${ project.client }`, { headers: { Authorization: token } } );
 
     const margin = 1 + ( project.invoiceMargin / 100 );
 
@@ -69,7 +70,7 @@ const createInvoice = async ( data, token ) => {
     newInvoice.total = newInvoice.items.reduce( ( total, item ) => total + item.cost, 0 );
 
     const invoice = await new Invoice( newInvoice ).save();
-    await PdfService.generate( invoice, project );
+    await PdfService.generate( invoice, project, client );
 
     return invoice;
 };
